@@ -1,1 +1,50 @@
 
+## Sarcina 1 
+
+
+La ce adresă IP se rezolvă?
+   -La adresa 1.2.3.4
+Este accesibil?
+   -Nu
+Care este eroarea?
+   -Request timed out — 4 pachete trimise, 0 primite, 100% pierdere
+
+
+## Sarcina 2 
+
+
+De unde vine răspunsul?
+  -Serverul DNS este 192.168.1.1, dar nu cunoaște wiki.local. 
+   Adresa 1.2.3.4 a venit din fișierul hosts local, care are prioritate față de DNS.
+
+
+## Sarcina 3 
+
+
+Câte hopuri până se întrerupe?
+  -5 hopuri reale, după care Request timed out
+Unde se oprește?
+  -La hopul 5 (10.0.240.145), pachetele se pierd în internet deoarece 1.2.3.4 nu există ca destinație accesibilă
+
+
+## Sarcina 4 
+
+
+
+Ce s-a schimbat?
+   -wiki.local se rezolvă acum la 127.0.0.1 
+Este accesibil acum?
+   -Ping răspunde instant cu 0% pierdere
+De ce?
+   -Fișierul hosts are prioritate față de DNS, deci redirectează traficul către calculatorul local
+
+## Sarcina 5 
+
+Cauza principală:
+   -O intrare greșită în fișierul hosts local (1.2.3.4 wiki.local) a redirecționat traficul către o adresă IP 
+inexistentă în loc de serverul corect.
+Ce instrument ar putea cauza această greșeală automat?
+   -Un script de configurare automată care a aplicat greșit un template pe stațiile angajaților.
+Cum se previne?
+   -Folosirea unui server DNS intern centralizat pentru domenii .local,restricționarea drepturilor de editare
+a fișierului hosts,și monitorizarea modificărilor prin soluții de securitate endpoint.
