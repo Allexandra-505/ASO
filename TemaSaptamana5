@@ -1,0 +1,34 @@
+#include <windows.h>
+#include <iostream>
+#include <vector>
+
+int main() {
+    SC_HANDLE scmHandle = OpenSCManager(NULL, NULL, SC_MANAGER_ENUMERATE_SERVICE);
+    if (!scmHandle) {
+        std::cerr << "Eroare la deschiderea SCM!" << std::endl;
+        return 1;
+    }
+    DWORD bytesNeeded = 0;
+    DWORD servicesCount = 0;
+    DWORD resumeHandle = 0;
+
+    EnumServicesStatusEx(
+        scmHandle, SC_ENUM_PROCESS_INFO, SERVICE_WIN32, SERVICE_ACTIVE,
+        NULL, 0, &bytesNeeded, &servicesCount, &resumeHandle, NULL);
+
+    std::vector<BYTE> buffer(bytesNeeded);
+    LPENUM_SERVICE_STATUS_PROCESS services = reinterpret_cast<LPENUM_SERVICE_STATUS_PROCESS>(buffer.data());
+
+    if (EnumServicesStatusEx(
+        scmHandle, SC_ENUM_PROCESS_INFO, SERVICE_WIN32, SERVICE_ACTIVE,
+        buffer.data(), bytesNeeded, &bytesNeeded, &servicesCount, &resumeHandle, NULL)) {
+
+        for (DWORD i = 0; i < servicesCount; ++i) {
+            std::wcout << L"Serviciu: " << services[i].lpServiceName
+                << L" | Display: " << services[i].lpDisplayName << std::endl;
+        }
+    }
+
+    CloseServiceHandle(scmHandle);
+    return 0;
+}
