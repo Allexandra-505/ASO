@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <windows.h>
+
+int main()
+{
+    HKEY hKey;
+    char szSubkey[256];
+    DWORD dwIndex = 0;
+    DWORD dwSize = sizeof(szSubkey);
+    LONG lRet;
+
+    lRet = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0, KEY_READ, &hKey);
+    if (lRet != ERROR_SUCCESS)
+    {
+        printf("Nu s-a putut deschide cheia!\n");
+        return 1;
+    }
+
+    printf("Subcheile cheii CurrentVersion:\n\n");
+
+    while (RegEnumKeyExA(hKey, dwIndex, szSubkey, &dwSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
+    {
+        printf("%lu. %s\n", dwIndex + 1, szSubkey);
+        dwIndex++;
+        dwSize = sizeof(szSubkey);
+    }
+
+    printf("\nTotal subchei: %lu\n", dwIndex);
+
+    RegCloseKey(hKey);
+
+    return 0;
+}
