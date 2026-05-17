@@ -1,0 +1,90 @@
+﻿@model List<TodoApp.Models.Sarcina>
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listă Activități To-Do</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f4f6f9; }
+        .sarcina-terminata { text-decoration: line-through; color: #6c757d; }
+        .card-todo { border-top: 4px solid #6f42c1; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-dark">Listă Activități (To-Do)</h2>
+            </div>
+
+            <div class="card card-todo shadow-sm p-4 bg-white rounded">
+
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                    <span class="text-secondary fw-semibold">Sarcini curente</span>
+                    <div>
+                        <span class="badge bg-primary">Total: @ViewBag.Total</span>
+                        <span class="badge bg-success">Rezolvate: @ViewBag.Rezolvate</span>
+                    </div>
+                </div>
+
+                <form asp-action="Adauga" method="post" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="sarcinaNouа" class="form-control" placeholder="Adaugă o activitate nouă..." required>
+                        <button type="submit" class="btn text-white" style="background-color: #6f42c1;">
+                            <i class="bi bi-plus-lg"></i> Adaugă
+                        </button>
+                    </div>
+                </form>
+
+                <div class="list-group">
+                    @if (Model.Count == 0)
+                    {
+                        <div class="text-center text-muted my-3">
+                            <i class="bi bi-info-circle d-block mb-1 fs-4 text-secondary"></i>
+                            Nu există sarcini în listă.
+                        </div>
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <a href="/Home/Bifeaza?index=@i" class="me-3 text-decoration-none">
+                                        @if (Model[i].Finalizata)
+                                        {
+                                            <i class="bi bi-check-square-fill text-success fs-5"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-square text-muted fs-5"></i>
+                                        }
+                                    </a>
+                                    <span class="@(Model[i].Finalizata ? "sarcina-terminata" : "")">
+                                        @Model[i].Text
+                                    </span>
+                                </div>
+                                <a href="/Home/Sterge?index=@i"
+                                   class="btn btn-sm btn-outline-danger border-0"
+                                   onclick="return confirm('Sigur doriți să ștergeți această sarcină?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
